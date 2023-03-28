@@ -5,8 +5,6 @@ import Notiflix from 'notiflix';
 
 
 const searchForm = document.querySelector('#search-form');
-const searchText = document.querySelector('input');
-const searchBtn = document.querySelector('.search-btn');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 
@@ -30,7 +28,7 @@ function fetchArticles(q, page) {
   });
 }
 
-searchForm.addEventListener('submit', async () => {
+searchForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   cleanGallery();
   search = event.target[0].value;
