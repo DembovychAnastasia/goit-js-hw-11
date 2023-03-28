@@ -12,9 +12,11 @@ let page = 1;
 let search = '';
 let images = [];
 
+// fetchArticles
+
 axios.defaults.baseURL = 'https://pixabay.com/api/';
 
-function fetchArticles(q, page) {
+function pixabayFetchArticles(q, page) {
   return axios.get('', {
     params: {
       q,
@@ -38,7 +40,7 @@ searchForm.addEventListener('submit', async (event) => {
     );
   }
   try {
-    const response = await fetchArticles(search, page);
+    const response = await pixabayFetchArticles(search, page);
     if (!response.data.hits.length) {
       throw new Error(
         Notiflix.Notify.failure(
@@ -115,7 +117,7 @@ loadMoreBtn.addEventListener('click', onLoadMore);
 async function onLoadMore() {
   page += 1;
   try {
-    const response = await fetchArticles(search, page);
+    const response = await pixabayFetchArticles(search, page);
     images = [...images, ...response.data.hits];
     appendItems(response.data.hits);
     scroll();
@@ -129,15 +131,4 @@ function cleanGallery() {
   gallery.innerHTML = '';
   page = 1;
   loadMoreBtn.setAttribute('hidden', true);
-}
-
-function scroll() {
-  const { height: cardHeight } = document
-    .querySelector('.gallery')
-    .firstElementChild.getBoundingClientRect();
-
-  window.scrollBy({
-    top: cardHeight * 2,
-    behavior: 'smooth',
-  });
 }
