@@ -9,11 +9,6 @@ const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 
 let page = 1;
-let search = '';
-let images = [];
-
-// fetchArticles
-
 axios.defaults.baseURL = 'https://pixabay.com/api/';
 
 function pixabayFetchArticles(q, page) {
@@ -29,6 +24,8 @@ function pixabayFetchArticles(q, page) {
     },
   });
 }
+let search = '';
+let photos = [];
 
 searchForm.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -53,7 +50,7 @@ searchForm.addEventListener('submit', async (event) => {
       );
     }
     console.log(response);
-    images = response.data.hits;
+    photos = response.data.hits;
     appendItems(response.data.hits);
     showBtn(response.data.totalHits);
   } catch (error) {
@@ -62,7 +59,7 @@ searchForm.addEventListener('submit', async (event) => {
 });
 
 function showBtn(totalHits) {
-  if (images.length < totalHits) {
+  if (photos.length < totalHits) {
     loadMoreBtn.removeAttribute('hidden');
   } else {
     loadMoreBtn.setAttribute('hidden', true);
@@ -118,9 +115,9 @@ async function onLoadMore() {
   page += 1;
   try {
     const response = await pixabayFetchArticles(search, page);
-    images = [...images, ...response.data.hits];
+    photos = [...photos, ...response.data.hits];
     appendItems(response.data.hits);
-    scroll();
+    scrollWin();
     showBtn(response.data.totalHits);
   } catch (error) {
     Notiflix.Notify.failure(error.message);
@@ -131,4 +128,14 @@ function cleanGallery() {
   gallery.innerHTML = '';
   page = 1;
   loadMoreBtn.setAttribute('hidden', true);
+}
+function scrollWin() {
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
 }
